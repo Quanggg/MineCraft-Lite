@@ -4,9 +4,6 @@
 !/Assets/
 !/ProjectSettings/
 !/Packages/
-*.ogg
-*.ogg.meta
 !README.md
-!LICENSE
 !/UnityPackage/
 !.gitignore
