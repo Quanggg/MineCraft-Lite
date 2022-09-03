@@ -18,10 +18,14 @@ public class UI : MonoBehaviour
   public void UpdateUI()
   {
     hotbar.UpdateHotbar();
-    if (Input.GetKeyDown(KeyCode.F1))
+    if (Input.GetKeyDown(KeyCode.Escape))
     {
-      hideUI = !hideUI;
-      playingUI.gameObject.SetActive(!hideUI);
+      OnEscPress();
     }
+  }
+  public void OnEscPress()
+  {
+    hideUI = !hideUI;
+    playingUI.gameObject.SetActive(!hideUI);
   }
 }

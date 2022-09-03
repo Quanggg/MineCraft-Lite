@@ -108,6 +108,10 @@ public class GameManager : MonoBehaviour
     textures = temp;
     Shader.SetGlobalTexture("_BlockTextures", textures);
   }
+  public void QuitGame()
+  {
+    Application.Quit();
+  }
 }
 [System.Serializable]
 public class GameSettings

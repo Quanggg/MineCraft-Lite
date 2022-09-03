@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+  public GameObject inGameMenu;
   const int playerLayer = 8;
   private Vector3 euler = new Vector3();
   private Quaternion cameraRotation;
   private Vector3 cameraPosition;
   private long lastPressedSpace = 0;
   public State state = State.Creative_Walking;
+  private State prevState = State.Creative_Walking;
   private bool running = false;
   private float wobble = 0;
   private float wobbleIntensity = 0;
@@ -17,10 +19,9 @@ public class Player : MonoBehaviour
 
   public enum State
   {
-    Survival = 0,
     Creative_Walking = 1,
     Creative_Flying = 2,
-    Spectator = 3
+    In_Menu = 3
   }
 
   [System.Serializable]
@@ -44,12 +45,11 @@ public class Player : MonoBehaviour
 
   void Update()
   {
-    setup.myRigidbody.isKinematic = (GameManager.instance.isInStartup || state == State.Spectator);
+    setup.myRigidbody.isKinematic = (GameManager.instance.isInStartup || state == State.In_Menu);
 
     if (Input.GetKeyDown(KeyCode.Escape))
     {
-      Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-      Cursor.visible = (Cursor.lockState == CursorLockMode.None);
+      OnEscPress();
     }
 
 
@@ -68,17 +68,13 @@ public class Player : MonoBehaviour
     if (state > (State)1) wobbleTargetIntensity = 0;
     wobbleIntensity = Mathf.Lerp(wobbleIntensity, wobbleTargetIntensity, Time.deltaTime * 16f);
 
-    if (state < State.Spectator)
+    if (state < State.In_Menu)
     {
       Movement(movement, running);
-    }
-    else
-    {
-      SpectatorMovement(movement, running);
+      BlockPlacement();
     }
 
     CameraUpdate();
-    BlockPlacement();
   }
 
   private long TimeStamp()
@@ -248,32 +244,20 @@ public class Player : MonoBehaviour
       setup.highlightPrefab.SetActive(false);
     }
   }
-
-  private void SpectatorMovement(Vector2 movement, bool running)
+  public void OnEscPress()
   {
-    float moveSpeed = running ? 16 : 8;
-
-    Vector3 forward = setup.mainCamera.transform.forward;
-    forward.y = 0;
-    forward.Normalize();
-
-    Vector3 right = setup.mainCamera.transform.right;
-    right.y = 0;
-    right.Normalize();
-
-    float altitude = 0;
-
-    if (Input.GetKey(KeyCode.Space))
+    Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+    Cursor.visible = (Cursor.lockState == CursorLockMode.None);
+    if (Cursor.visible)
     {
-      altitude += 8;
+      inGameMenu.SetActive(true);
+      prevState = state;
+      state = State.In_Menu;
     }
-    if (Input.GetKey(KeyCode.LeftShift))
+    else
     {
-      altitude -= 8;
+      inGameMenu.SetActive(false);
+      state = prevState;
     }
-
-    transform.position += movement.y * forward * Time.deltaTime * moveSpeed;
-    transform.position += movement.x * right * Time.deltaTime * moveSpeed;
-    transform.position += Vector3.up * altitude * Time.deltaTime;
   }
 }
