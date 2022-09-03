@@ -14,3 +14,4 @@ A simple & lite version of Minecraft
 - https://assetstore.unity.com/packages/audio/music/orchestral/medieval-fantasy-music-peacetown-village-225884
 - https://assetstore.unity.com/packages/audio/music/casual-game-bgm-5-135943
 - https://www.curseforge.com/minecraft/texture-packs/unity
+- https://github.com/przemyslawzaworski/Unity3D-CG-programming
